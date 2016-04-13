@@ -12,6 +12,7 @@ for i in xrange( T ):
 start = time.clock()
 
 
+print( "Case #{0}: {1}".format( i, x ) )
 
 end = time.clock()
 print end - start
