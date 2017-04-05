@@ -57,9 +57,6 @@ def dig(R, C, masu, decr):
                 if c > 0 and r < (R - 1):
                     combi.append((r+1, c-1))
 
-                if len(combi) > decr:
-                    return masu
-
                 for (r1, c1) in combi:
                     if decr == 0:
                         masu[r1][c1] = '1'
@@ -82,9 +79,9 @@ start = time.clock()
 
 for t in xrange( T ):
 
-    R = TS[i][0]
-    C = TS[i][1]
-    M = TS[i][2]
+    R = TS[t][0]
+    C = TS[t][1]
+    M = TS[t][2]
 
     empties = R * C - M
     decr = empties
@@ -115,6 +112,18 @@ for t in xrange( T ):
 
         if mm != M:
             impossible = True
+        for x in xrange(min(2, C)):
+            for z in xrange(min(2, R)):
+            print("x,z:", x, z)
+            if masu[0][x] == '*':
+                print("c-x:", x)
+                impossible = True
+            print("r-x:", x)
+            if masu[x][0] == '*':
+                print("r-x:", x)
+                impossible = True
+
+
 
     masu[0][0] = 'C'
     print( "Case #{0}:".format( t + 1 ) )
