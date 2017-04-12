@@ -20,14 +20,27 @@ for i in xrange(10):
     dmap[digits[i]] = str(i)
 
 digits_list = map( lambda x: list(x), digits )
+checks = []
+checks[0] = {"Z": "ZERO", "W": "TWO", "X": "SIX", "G": "EIGHT"}
+checks[1] = {"S": "SEVEN"}
+checks[2] = {"V": "FIVE"}
+checks[3] = {"F": "FOUR"}
+checks[4] = {"O": "ONE"}
+checks[5] = {"T": "THREE"}
+checks[6] = {"N": "NINE"}
 
-def consists( s, xs ):
-    candi = [ x for x in digits if s in x ]
-    for c in candi:
-        remain = [ x for x in xs if x not in c ]
-        if len(c) == len(remain):
-            return (c, remain)
-    return (None, None)
+
+
+def drain( i, s, numbers ):
+    keys = checks[i].keys()
+    found = 0
+    for k in keys:
+        pos = s.find(k)
+        if pos >= 0:
+            tmp = s[0:pos] + s[(pos+1):]
+            found += 1
+    if found > 0:
+        return drain(i, s, numbers)
 
 #----------------------------
 start = time.clock()
