@@ -15,32 +15,47 @@ for t in xrange( T ):
     ts.append( raw_input() )
 
 digits = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
-dmap = {}
-for i in xrange(10):
-    dmap[digits[i]] = str(i)
 
 digits_list = map( lambda x: list(x), digits )
-checks = []
-checks[0] = {"Z": "ZERO", "W": "TWO", "X": "SIX", "G": "EIGHT"}
-checks[1] = {"S": "SEVEN"}
-checks[2] = {"V": "FIVE"}
-checks[3] = {"F": "FOUR"}
-checks[4] = {"O": "ONE"}
-checks[5] = {"T": "THREE"}
-checks[6] = {"N": "NINE"}
+checks = [
+  {"Z": "ZERO", "W": "TWO", "X": "SIX", "G": "EIGHT"},
+  {"S": "SEVEN"},
+  {"V": "FIVE"},
+  {"F": "FOUR"},
+  {"O": "ONE"},
+  {"T": "THREE"},
+  {"N": "NINE"}
+]
+dmap = {
+    "Z": "0",
+    "W": "2",
+    "X": "6",
+    "G": "8",
+    "S": "7",
+    "V": "5",
+    "F": "4",
+    "O": "1",
+    "T": "3",
+    "N": "9"
+}
 
+checks_list = [ dict([(k, list(v)) for k,v in check.items()]) for check in checks ]
 
-
-def drain( i, s, numbers ):
-    keys = checks[i].keys()
-    found = 0
-    for k in keys:
-        pos = s.find(k)
-        if pos >= 0:
-            tmp = s[0:pos] + s[(pos+1):]
-            found += 1
-    if found > 0:
-        return drain(i, s, numbers)
+def drain( ss, cs ):
+    s = ss
+    tmp = ''
+    for c in cs:
+        if len(s) == 1:
+            if c == s:
+                return ''
+        else:
+            pos = s.find(c)
+            if pos >= 0:
+                tmp = s[0:pos]
+                if len(s) > (pos + 1):
+                    tmp += s[(pos+1):]
+        s = tmp
+    return s
 
 #----------------------------
 start = time.clock()
@@ -51,23 +66,19 @@ for t in xrange(T):
     xs = list(S)
     numbers = []
     wk = S
-    while (wk <> ''):
-        for i in xrange(10):
-            digit_l = digits_list[i]
-            digit = digits[i]
-            fail = False
-            temp_s = wk
-            for d in digit_l:
-                idx = temp_s.find(d)
-                if idx >= 0:
-                    temp_s = temp_s[0:idx] + temp_s[(idx+1):]
-                else:
-                    fail = True
-                    break
-            if not fail:
-                numbers.append( dmap[digit] )
-                wk = temp_s
-            if len(wk) == 0:
+
+    for i in xrange(7):
+        check = checks_list[i]
+        check_s = checks[i]
+        while (True):
+            found = False
+            for c in check.keys():
+                if c in wk:
+                    # print(c, check[c])
+                    found = True
+                    numbers.append(dmap[c])
+                    wk = drain(wk, check[c])
+            if not found:
                 break
 
     numbers.sort()
